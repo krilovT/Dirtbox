@@ -8,14 +8,12 @@ import org.newdawn.slick.geom.Vector2f;
 
 import game.Sprite;
 import game.Viewport;
+import game.physics.PhysicsObject;
 
-public class Entity {
+public class Entity extends PhysicsObject {
 	private SpriteSheet spritesheet;
 	private Shape hitbox;
 	private Sprite sprite;
-	private Vector2f pos;
-	private Vector2f vel;
-	private Vector2f accel;
 	private float scale = 1f;
 	
 	//based on self acceleration
@@ -69,26 +67,13 @@ public class Entity {
 	public void update(float frametime) {
 		Vector2f prevpos = pos.copy();
 		this.pos.add(this.vel.scale(frametime));
-		this.vel.add(this.accel.scale(frametime));
+		this.vel.add(this.getaccel().scale(frametime));
 		this.hitbox.setCenterX(this.pos.x);
 		this.hitbox.setCenterY(this.pos.y);
 	}
 	
 	public void magnify(float factor) {
 		this.scale *= factor;
-	}
-	
-	public Vector2f getAccel() {
-		return this.accel;
-	}
-	public void setAccel(Vector2f newAccel) {
-		this.accel = newAccel;
-	}
-	public Vector2f getVel() {
-		return this.vel;
-	}
-	public void setVel(Vector2f newVel) {
-		this.vel = newVel;
 	}
 	public float getMaxHorzSpeed() {
 		return this.maxHorzSpeed;

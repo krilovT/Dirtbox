@@ -18,16 +18,16 @@ public class PlayerEntity extends Entity implements DefaultKeyListener{
 	public void keyPressed(int key, char c) {
 		switch (key) {
 		case Input.KEY_UP:
-			super.getVel();
+			//super.getVel();
 			break;
 		case Input.KEY_DOWN:
 			//this should let player go through platforms
 			break;
 		case Input.KEY_RIGHT:
-			Vector2f accel = super.getAccel();
+			//Vector2f accel = super.getAccel();
 			break;
 		case Input.KEY_LEFT:
-			Vector2f accel = super.getAccel();
+			//Vector2f accel = super.getAccel();
 			break;
 		}
 		
