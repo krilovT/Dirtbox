@@ -12,7 +12,6 @@ import game.physics.PhysicsObject;
 
 public class Entity extends PhysicsObject {
 	private SpriteSheet spritesheet;
-	private Shape hitbox;
 	private Sprite sprite;
 	private float scale = 1f;
 	
@@ -22,17 +21,17 @@ public class Entity extends PhysicsObject {
 	public Entity(Image spritesheet, int sheetwidth, int sheetheight, float hitwidth, float hitheight, Vector2f pos) {
 		this.pos = pos.copy();
 		setSpriteSheet(spritesheet, sheetwidth, sheetheight);
-		this.hitbox = new Rectangle(0, 0, hitwidth, hitheight);
-		this.hitbox.setCenterX(this.pos.x);
-		this.hitbox.setCenterY(this.pos.y);
+		this.setHitbox(new Rectangle(0, 0, hitwidth, hitheight));
+		this.getHitbox().setCenterX(this.pos.x);
+		this.getHitbox().setCenterY(this.pos.y);
 	}
 
 	public Entity(Image spritesheet, int sheetwidth, int sheetheight, Vector2f pos) {
 		this.pos = pos.copy();
 		this.setSpriteSheet(spritesheet, sheetwidth, sheetheight);
 		this.generateHitBox();
-		this.hitbox.setCenterX(this.pos.x);
-		this.hitbox.setCenterY(this.pos.y);
+		this.getHitbox().setCenterX(this.pos.x);
+		this.getHitbox().setCenterY(this.pos.y);
 	}
 
 	public Entity(SpriteSheet sheet, Vector2f pos) {
@@ -56,7 +55,7 @@ public class Entity extends PhysicsObject {
 	public void generateHitBox() {
 		float width = this.spritesheet.getWidth() / this.spritesheet.getHorizontalCount();
 		float height = this.spritesheet.getHeight() / this.spritesheet.getVerticalCount();
-		this.hitbox = new Rectangle(-width/2, -height/2, width, height);
+		this.setHitbox(new Rectangle(-width/2, -height/2, width, height));
 	}
 
 	public void draw(Viewport vp) {
@@ -65,11 +64,7 @@ public class Entity extends PhysicsObject {
 	}
 
 	public void update(float frametime) {
-		Vector2f prevpos = pos.copy();
-		this.pos.add(this.vel.scale(frametime));
-		this.vel.add(this.getaccel().scale(frametime));
-		this.hitbox.setCenterX(this.pos.x);
-		this.hitbox.setCenterY(this.pos.y);
+		
 	}
 	
 	public void magnify(float factor) {
