@@ -2,6 +2,7 @@ package game.entities;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -61,6 +62,7 @@ public class Entity extends PhysicsObject {
 	public void draw(Viewport vp) {
 		this.sprite.img = this.spritesheet.getSprite(0, 0).getScaledCopy(scale);
 		vp.draw(this.sprite);
+		vp.draw(this.getHitbox());
 	}
 
 	public void update(float frametime) {

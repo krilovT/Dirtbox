@@ -47,8 +47,8 @@ public class PhysicsObject {
 			}
 		}
 		this.prevpos = pos.copy();
-		this.pos.add(this.vel.scale(frametime));
-		this.vel.add(this.getaccel().scale(frametime));
+		this.pos.add(this.vel.copy().scale(frametime));
+		this.vel.add(this.getaccel().copy().scale(frametime));
 		this.getHitbox().setCenterX(this.pos.x);
 		this.getHitbox().setCenterY(this.pos.y);
 	}
@@ -58,15 +58,45 @@ public class PhysicsObject {
 	}
 	public static void checkCollision(PhysicsObject p1, PhysicsObject p2) {
 		if(!p1.hitbox.intersects(p2.hitbox)) {
-			return;
+			//return;
 		}
+		boolean collides = false;
 		LinkedList<Vector2f> collpoints = new LinkedList<Vector2f>();
+		LinkedList<Vector2f> normals = new LinkedList<Vector2f>();
+		float maxdist = 0;
 		for(int p1index = 0; p1index < p1.hitbox.getPointCount(); p1index++) {
-			Line l = new Line(p1.prevpos, p1.pos);
-			
+			float[] point0 = p1.hitbox.getPoint(p1index);
+			Vector2f point1 = new Vector2f(point0[0], point0[1]);
+			point1.add(p1.prevpos.copy().sub(p1.pos));
+			Line l = new Line(new Vector2f(point0[0],point0[1]), point1);
+			for(int p2index = 0; p2index < p2.hitbox.getPointCount(); p2index++) {
+				float[] vertex0 = p2.hitbox.getPoint(p2index);
+				float[] vertex1 = p2.hitbox.getPoint((p2index + 1) % p2.hitbox.getPointCount());
+				Line side = new Line(new Vector2f(vertex0[0], vertex0[1]), new Vector2f(vertex1[0], vertex1[1]));
+				Vector2f collpos = l.intersect(side);
+				if(collpos != null && l.on(collpos)) {
+					collpoints.add(collpos);
+					collides = true;
+					Vector2f vector = new Vector2f(side.getDX(), side.getDY());
+					Vector2f normal = vector.getPerpendicular();
+					normals.add(normal);
+					float dist = collpos.copy().sub(new Vector2f(point0[0], point0[1])).length();
+					System.out.println("Point: " + point0[0] + ", " + point0[1]);
+					if(dist > maxdist) {
+						maxdist = dist;
+					}
+				}
+			}
 		}
-		for(int p2index = 0; p2index < p1.hitbox.getPointCount(); p2index++) {
+		
+		Vector2f movementvec = p1.prevpos.copy().sub(p1.pos).normalise().scale(maxdist);
+		p1.pos.add(movementvec);
+		
+		for(int p2index = 0; p2index < p2.hitbox.getPointCount(); p2index++) {
 			Line l = new Line(p2.prevpos, p2.pos);
+		}
+		if(collides) {
+			System.out.println("COLLISION");
 		}
 	}
 }
